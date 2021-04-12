@@ -7,19 +7,36 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>search</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <!-- <link rel="stylesheet" href="./css/basiclightbox.min.css"> -->
 </head>
   <body>
 
   <!-- =============== Form ======================== -->
 
-    <form class="search-form" id="search-form">
+    <!-- <form class="search-form" id="search-form">
       <input type="text" name="query" autocomplete="off" placeholder="Search images..." class="search-input" />
     </form>
+    <div class="btn-primary">
+      <button type="submit" class="btn">SEARCH</button>
+    </div> -->
 
   <!-- ============== Image List ========== -->
 
-    <ul class="gallery"></ul>
+    <!-- <ul class="gallery"></ul> -->
 
+    <!-- ============= Repeta methode  =========================== -->
+
+    <form type="submit" class="search-form">
+        <input 
+              type="text"
+              name="query" 
+              placeholder="search images..." 
+              autocomplete="off" />
+      <button type="submit" class="btn btn-primary mb-2">Искать</button>
+    </form>
+    
+    <ul class="gallery"></ul>
+    <button class="load">load more</button>
   </body>
 
 </html>
