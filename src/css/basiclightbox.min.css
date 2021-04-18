@@ -55,3 +55,73 @@
 .basicLightbox--visible .basicLightbox__placeholder {
   transform: scale(1);
 }
+
+body {
+  margin: 0;
+  background-color: rgb(209, 138, 30);
+}
+
+.search-input {
+  width: 299px;
+  padding: 10px;
+  font-weight: 700;
+}
+
+.search-input::placeholder {
+  font-size: inherit;
+}
+
+.search-form {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
+  font-size: 24;
+  font-weight: 700;
+  width: 100px;
+  margin-left: 8px;
+  cursor: pointer;
+  background-color: #ecb10f;
+  color: azure;
+  border-radius: 8%;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.gallery {
+  padding-left: 0;
+  list-style: none;
+  width: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.load {
+  visibility: hidden;
+}
+
+.toStart {
+  visibility: hidden;
+}
+
+.clear {
+  visibility: hidden;
+}
+
+.is-open {
+  visibility: visible;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+}
