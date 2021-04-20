@@ -28,59 +28,19 @@ function createImage(e) {
   const query = e.target.children[0].value;
   requestParams.query = query;
   sendRequest(requestParams.query, requestParams.page).then(data => {
-    refs.gallery.insertAdjacentHTML(
-      'beforeend',
-      data.map(el => createMarkup(el)),
-    );
+    const markup = data.map(el => createMarkup(el));
+    refs.gallery.innerHTML = markup;
   });
-  refs.load.classList.add('is-open');
-  refs.clear.classList.add('is-open');
-  refs.toStart.classList.add('is-open');
 }
 
 function modalOpen(e) {
-  if (e.target.nodeName === 'IMG') {
-    const instance = basicLightbox.create(`
+  const instance = basicLightbox.create(`
     <img src=${e.target.dataset.source} width="800" height="600">
 `);
 
-    instance.show();
-  }
+  instance.show();
 }
 
-function loadMore() {
-  requestParams.page += 1;
-  sendRequest(requestParams.query, requestParams.page).then(data => {
-    refs.gallery.insertAdjacentHTML(
-      'beforeend',
-      data.map(el => createMarkup(el)),
-    );
-    const totalScrollHeight = refs.gallery.clientHeight;
-    window.scrollTo({
-      top: totalScrollHeight,
-      behavior: 'smooth',
-    });
-  });
-}
-
-function clearAll(e) {
-  e.preventDefault();
-  refs.gallery.innerHTML = '';
-  refs.load.classList.remove('is-open');
-  refs.clear.classList.remove('is-open');
-  refs.toStart.classList.remove('is-open');
-}
-
-function toTop() {
-  window.scrollTo({
-    top: 100,
-    left: 100,
-    behavior: 'smooth',
-  });
-}
-
-refs.toStart.addEventListener('click', toTop);
-refs.clear.addEventListener('click', clearAll);
-refs.load.addEventListener('click', loadMore);
 refs.gallery.addEventListener('click', modalOpen);
+
 refs.form.addEventListener('submit', createImage);
