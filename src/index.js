@@ -17,7 +17,6 @@ const refs = {
   clear: document.querySelector('.clear'),
   toStart: document.querySelector('.toStart'),
 };
-
 const requestParams = {
   query: '',
   page: 1,
@@ -25,12 +24,40 @@ const requestParams = {
 
 function createImage(e) {
   e.preventDefault();
-  const query = e.target.children[0].value;
+  refs.load.classList.add('is-open');
+  refs.clear.classList.add('is-open');
+  refs.toStart.classList.add('is-open');
+  const query = e.target.children[0].value.trim();
+  requestParams.page = 1;
   requestParams.query = query;
-  sendRequest(requestParams.query, requestParams.page).then(data => {
-    const markup = data.map(el => createMarkup(el));
-    refs.gallery.innerHTML = markup;
-  });
+  if (requestParams.query === '') {
+    error({
+      text: 'enter something',
+      delay: 1000,
+    });
+    refs.gallery.innerHTML = '';
+    refs.load.classList.remove('is-open');
+    refs.clear.classList.remove('is-open');
+    refs.toStart.classList.remove('is-open');
+    return;
+  }
+  if (query) {
+    sendRequest(requestParams.query, requestParams.page).then(data => {
+      if (data.length === 0) {
+        error({
+          text: 'not found',
+          delay: 1000,
+        });
+        refs.gallery.innerHTML = '';
+        refs.load.classList.remove('is-open');
+        refs.clear.classList.remove('is-open');
+        refs.toStart.classList.remove('is-open');
+        return;
+      }
+      const markup = data.map(el => createMarkup(el)).join('');
+      refs.gallery.innerHTML = markup;
+    });
+  }
 }
 
 function modalOpen(e) {
@@ -41,6 +68,41 @@ function modalOpen(e) {
   instance.show();
 }
 
-refs.gallery.addEventListener('click', modalOpen);
+function goToTop() {
+  window.scrollTo({
+    top: 100,
+    left: 100,
+    behavior: 'smooth',
+  });
+}
 
+function loadMore() {
+  sendRequest(requestParams.query, requestParams.page).then(data => {
+    requestParams.page += 1;
+    const markup = data.map(el => createMarkup(el)).join('');
+    refs.gallery.insertAdjacentHTML('beforeend', markup);
+  });
+}
+
+function clearAll(e) {
+  e.preventDefault();
+  refs.gallery.innerHTML = '';
+  refs.load.classList.remove('is-open');
+  refs.clear.classList.remove('is-open');
+  refs.toStart.classList.remove('is-open');
+  requestParams.query = '';
+}
+
+const observer = new IntersectionObserver(loadMore, {
+  root: null,
+  rootMargin: '0px',
+  threshold: 0,
+});
+
+observer.observe(refs.load);
+
+refs.clear.addEventListener('click', clearAll);
+refs.load.addEventListener('click', loadMore);
+refs.gallery.addEventListener('click', modalOpen);
+refs.toStart.addEventListener('click', goToTop);
 refs.form.addEventListener('submit', createImage);

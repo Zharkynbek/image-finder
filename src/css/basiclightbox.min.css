@@ -125,3 +125,19 @@ img {
   display: flex;
   justify-content: space-between;
 }
+
+.material-icons {
+  color: #ecb10f;
+  font-size: 42px;
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  background-color: transparent;
+  bottom: 0px;
+  right: 50px;
+  text-decoration: none;
+  text-align: center;
+  line-height: 50px;
+  opacity: 0;
+  cursor: pointer;
+}
