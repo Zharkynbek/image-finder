@@ -6,9 +6,6 @@ import * as basicLightbox from 'basiclightbox';
 import { error } from '@pnotify/core';
 import '@pnotify/core/dist/PNotify.css';
 import '@pnotify/core/dist/BrightTheme.css';
-import { alert, defaultModules } from '@pnotify/core';
-import * as PNotifyMobile from '@pnotify/mobile';
-import { template } from 'handlebars';
 
 const refs = {
   gallery: document.querySelector('.gallery'),
