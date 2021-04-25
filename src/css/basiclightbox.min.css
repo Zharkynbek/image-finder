@@ -71,6 +71,11 @@ body {
   font-size: inherit;
 }
 
+.list-card:hover {
+  transform: scale(1.11);
+  box-shadow: #9af507;
+}
+
 .search-form {
   margin-top: 25px;
   display: flex;

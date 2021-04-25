@@ -35,6 +35,7 @@ function findImage(e) {
     if (data < 1) {
       refs.clear.classList.remove('is-open');
       refs.load.classList.remove('is-open');
+      refs.toStart.classList.remove('is-open');
       error({
         text: 'not found. try again',
         delay: 1000,
@@ -44,6 +45,7 @@ function findImage(e) {
       refs.gallery.innerHTML = '';
       refs.clear.classList.remove('is-open');
       refs.load.classList.remove('is-open');
+      refs.toStart.classList.remove('is-open');
       error({
         text: 'enter something',
         delay: 1000,
@@ -81,6 +83,18 @@ function toTop() {
   });
 }
 
+function openModal(e) {
+  if (e.target.nodeName === 'IMG') {
+    basicLightbox
+      .create(
+        `<img src="${e.target.dataset.source}" width="800" height="600">
+`,
+      )
+      .show();
+  }
+}
+
+refs.gallery.addEventListener('click', openModal);
 refs.toStart.addEventListener('click', toTop);
 refs.load.addEventListener('click', loadMoreImage);
 refs.clear.addEventListener('click', clearAll);
