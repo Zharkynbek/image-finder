@@ -11,63 +11,54 @@ const refs = {
   form: document.querySelector('.search-form'),
   gallery: document.querySelector('.gallery'),
   load: document.querySelector('.load'),
+  toStart: document.querySelector('.toStart'),
   clear: document.querySelector('.clear'),
   input: document.querySelector('.input'),
-  toStart: document.querySelector('.toStart'),
 };
 
 const requestParams = {
   query: '',
   page: 1,
 };
-
 function findImage(e) {
   e.preventDefault();
-  const query = e.target[0].value.trim();
+  const query = e.target[0].value;
   requestParams.query = query;
-  refs.gallery.innerHTML = '';
   requestParams.page = 1;
-  if (query) {
-    getImage(requestParams.query, requestParams.page).then(data => {
-      console.log(requestParams.query);
-      refs.load.classList.add('is-open');
-      refs.clear.classList.add('is-open');
-      refs.toStart.classList.add('is-open');
-      refs.gallery.insertAdjacentHTML('beforeend', createMarkup(data));
-      if (data.length < 1) {
-        refs.load.classList.remove('is-open');
-        refs.clear.classList.remove('is-open');
-        refs.toStart.classList.remove('is-open');
-        error({
-          text: 'sorry bro, this page not exist',
-          delay: 1000,
-        });
-      }
-      if (requestParams.query === '') {
-        error({
-          text: 'error',
-          delay: 1000,
-        });
-      }
-    });
-  }
-}
-
-function openModal(e) {
-  if (e.target.nodeName === 'IMG') {
-    basicLightbox
-      .create(
-        `
-    <img src="${e.target.dataset.source}" width="800" height="600">`,
-      )
-      .show();
-  }
-}
-
-function loadMoreImage(e) {
-  e.preventDefault();
   getImage(requestParams.query, requestParams.page).then(data => {
-    requestParams.page += 1;
+    refs.gallery.innerHTML = '';
+    refs.gallery.insertAdjacentHTML('beforeend', createMarkup(data));
+    if (requestParams.query === '') {
+      refs.load.classList.remove('is-open');
+      refs.toStart.classList.remove('is-open');
+      refs.clear.classList.remove('is-open');
+      error({
+        text: 'enter something',
+        delay: 1000,
+      });
+      refs.gallery.innerHTML = '';
+    }
+    if (data.length < 1) {
+      refs.load.classList.remove('is-open');
+      refs.toStart.classList.remove('is-open');
+      refs.clear.classList.remove('is-open');
+      error({
+        text: 'not found',
+        delay: 1000,
+      });
+      refs.gallery.innerHTML = '';
+    }
+  });
+  refs.load.classList.add('is-open');
+  refs.toStart.classList.add('is-open');
+  refs.clear.classList.add('is-open');
+}
+
+// ================= loadMore
+function loadMore(e) {
+  e.preventDefault();
+  requestParams.page += 1;
+  getImage(requestParams.query, requestParams.page).then(data => {
     refs.gallery.insertAdjacentHTML('beforeend', createMarkup(data));
     const totalScrollHeight = refs.gallery.clientHeight;
     window.scrollTo({
@@ -76,15 +67,7 @@ function loadMoreImage(e) {
     });
   });
 }
-
-function clearAll(e) {
-  e.preventDefault();
-  refs.input.value = '';
-  refs.load.classList.remove('is-open');
-  refs.clear.classList.remove('is-open');
-  refs.toStart.classList.remove('is-open');
-  refs.gallery.innerHTML = '';
-}
+//================= toTop
 
 function toTop() {
   window.scrollTo({
@@ -94,8 +77,25 @@ function toTop() {
   });
 }
 
-refs.toStart.addEventListener('click', toTop);
+//==================== clearAll
+
+function clearAll(e) {
+  e.preventDefault();
+  refs.input.value = '';
+  refs.load.classList.remove('is-open');
+  refs.toStart.classList.remove('is-open');
+  refs.clear.classList.remove('is-open');
+  refs.gallery.innerHTML = '';
+}
+
+function modalOpen(e) {
+  basicLightbox
+    .create(`<img src=${e.target.dataset.source} width="800" height="600">`)
+    .show();
+}
+
+refs.gallery.addEventListener('click', modalOpen);
 refs.clear.addEventListener('click', clearAll);
-refs.load.addEventListener('click', loadMoreImage);
-refs.gallery.addEventListener('click', openModal);
+refs.toStart.addEventListener('click', toTop);
+refs.load.addEventListener('click', loadMore);
 refs.form.addEventListener('submit', findImage);
