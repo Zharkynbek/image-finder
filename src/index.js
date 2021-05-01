@@ -6,6 +6,7 @@ import * as basicLightbox from 'basiclightbox';
 import { error } from '@pnotify/core';
 import '@pnotify/core/dist/PNotify.css';
 import '@pnotify/core/dist/BrightTheme.css';
+import pagination from 'paginationjs';
 
 const refs = {
   form: document.querySelector('.search-form'),
@@ -22,6 +23,13 @@ const requestParams = {
 };
 function findImage(e) {
   e.preventDefault();
+  const observer = new IntersectionObserver(loadMore, {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0,
+  });
+  observer.observe(refs.load);
+
   const query = e.target[0].value;
   requestParams.query = query;
   requestParams.page = 1;
@@ -55,16 +63,16 @@ function findImage(e) {
 }
 
 // ================= loadMore
-function loadMore(e) {
-  e.preventDefault();
+function loadMore() {
+  // e.preventDefault();
   requestParams.page += 1;
   getImage(requestParams.query, requestParams.page).then(data => {
     refs.gallery.insertAdjacentHTML('beforeend', createMarkup(data));
     const totalScrollHeight = refs.gallery.clientHeight;
-    window.scrollTo({
-      top: totalScrollHeight,
-      behavior: 'smooth',
-    });
+    // window.scrollTo({
+    //   top: totalScrollHeight,
+    //   behavior: 'smooth',
+    // });
   });
 }
 //================= toTop
@@ -99,3 +107,25 @@ refs.clear.addEventListener('click', clearAll);
 refs.toStart.addEventListener('click', toTop);
 refs.load.addEventListener('click', loadMore);
 refs.form.addEventListener('submit', findImage);
+
+// pagination
+
+// $('#pagination-container').pagination({
+//   dataSource: function (done) {
+//     $.ajax({
+//       type: 'GET',
+//       url: getImage(requestParams.query, requestParams.page),
+//       success: function (data) {
+//         done(data.hits);
+//       },
+//     });
+//   },
+//   pageSize: 10,
+//   autoHidePrevious: true,
+//   autoHideNext: true,
+//   callback: function (data, pagination) {
+//     // template method of yourself
+//     const html = createMarkup(data);
+//     $('#data-container').html(html);
+//   },
+// });
